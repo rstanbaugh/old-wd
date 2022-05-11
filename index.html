@@ -3,12 +3,101 @@
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel=stylesheet href=./assets/css/style.css />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="./assets/css/style.css">
   <title>Document</title>
 </head>
-<body>
-  
+
+<!-- DEV-ITEM put a box around boxy -->
+<body class="border border-dark rounded m-2">
+  <header class="grad text-white text-center p-1">
+    <h2 >Weather Dashboard</h2>
+  </header>
+
+  <div class="container-fluid">
+    <div class="row border-primary">
+
+      <!-- left side -->
+      <div class="col-12 col-md-3 p-1">
+          <h5>Search for a City:</h5>
+          <form id="city-search" class="form-grp">
+            <input type="text" id="city-search" class="form-control form-block  mb-2" placeholder="San Diego" autofocus="true">
+            <button type="submit"  class="btn btn-sm btn-primary btn-block py-1 mb-2">Get User</button>
+          </form>
+          <div class="border-top border-dark my-3"></div>
+          <ul id="past-searches" class="list-group text-center list-group-secondary">
+            <li class="list-group-item list-group-item-secondary rounded py-1 border-0 mb-2">sgdsg</li>
+            <li class="list-group-item list-group-item-secondary rounded py-1 border-0 mb-2">sgdsg</li>
+            <li class="list-group-item list-group-item-secondary rounded py-1 border-0 mb-2">sgdsg</li>
+            <li class="list-group-item list-group-item-secondary rounded py-1 border-0 mb-2">sgdsg</li>
+            </li>
+          </ul>
+      </div>
+
+      <!-- right side -->
+      <div class="col-12 col-md-9">
+              <div class="border border-dark w-100 p-2 mt-2 mb-3">
+                <h5>Atlanta</h4>
+                <p>Temp:</p>
+                <p>Wind:</p>
+                <p>Humidity</p>
+                <p>UV Index:</p>
+                  <div class="card-group">
+              </div>
+
+            </div>
+            <h5>5-Day Forecast:</h5>
+            <div class="d-flex flex-wrap justify-content-between p">
+              <div class="weather-card">
+                <h6>3/31/2021</h6>
+                <img src="..." alt="...">
+                <p>Temp:</p>
+                <p>Wind:</p>
+                <p>Humidity:</p>
+              </div>
+
+              <div class="weather-card">
+                <h6>3/31/2021</h6>
+                <img src="..." alt="...">
+                <p>Temp:</p>
+                <p>Wind:</p>
+                <p>Humidity:</p>
+              </div>
+
+              <div class="weather-card">
+                <h6>3/31/2021</h6>
+                <img src="..." alt="...">
+                <p>Temp:</p>
+                <p>Wind:</p>
+                <p>Humidity:</p>
+              </div>
+
+              <div class="weather-card">
+                <h6>3/31/2021</h6>
+                <img src="..." alt="...">
+                <p>Temp:</p>
+                <p>Wind:</p>
+                <p>Humidity:</p>
+              </div>
+
+              <div class="weather-card">
+                <h6>3/31/2021</h6>
+                <img src="..." alt="...">
+                <p>Temp:</p>
+                <p>Wind:</p>
+                <p>Humidity:</p>
+              </div>
+
+            </div>
+
+
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/moment.min.js"></script>
   <script src="./assets/js/script.js"></script>
 </body>
 </html>

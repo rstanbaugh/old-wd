@@ -13,3 +13,16 @@
   font-size: small;
   padding-left: ;
 }
+
+.weather-card p {
+  font-size: .75em;
+}
+
+#current-weather h5{
+  padding-bottom: .5em;
+}
+
+#current-weather p {
+  font-size: .75em;
+  line-height: .9em;
+}

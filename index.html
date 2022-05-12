@@ -17,7 +17,7 @@
   <div class="container-fluid">
     <div class="row border-primary">
 
-      <!-- left side -->
+      <!-- left side / col start-->
       <div class="col-12 col-md-3 p-1">
           <h5>Search for a City:</h5>
           <form id="city-search" class="form-grp">
@@ -33,19 +33,22 @@
             </li>
           </ul>
       </div>
+      <!-- left side / col end -->
 
-      <!-- right side -->
+      <!-- right side / col start-->
       <div class="col-12 col-md-9">
-              <div id="current-weather" class="border border-dark w-100 p-2 mt-2 mb-3">
-                <h5>Atlanta</h4>
-                <p>Temp:</p>
-                <p>Wind:</p>
-                <p>Humidity</p>
-                <p>UV Index:</p>
-                  <div class="card-group">
-              </div>
+        <!-- current weather section on top right side -->
+        <div id="current-weather" class="border border-dark w-100 p-2 mt-2 mb-3">
+          <h5 id="selected-city">Atlanta</h4>
+          <p id="current-temp">Temp:</p>
+          <p id="current-wind">Wind:</p>
+          <p id="current-humidity">Humidity</p>
+          <p id="current-uvi">UV Index:</p>
+        </div>
+        <!-- end of current weather section -->
 
-            </div>
+        <!-- 5-day forcast -->
+        <div>
             <h5>5-Day Forecast:</h5>
             <div class="d-flex flex-wrap justify-content-between p">
               <div class="weather-card">
@@ -88,10 +91,12 @@
                 <p>Humidity:</p>
               </div>
 
-            </div>
+          </div>
+          <!-- end 5-day forecast div -->
 
-
+      <!-- Right side / col end -->
       </div>
+
     </div>
   </div>
 

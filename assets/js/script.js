@@ -4,12 +4,27 @@ var citySearchEl = document.querySelector("#city-search");
 var apiKeyOpenWeather = config.openWeatherApiKey;
 var apiKeyPositionStack = config.positionStackApiKey
 
-
-var selectedCity = {}
-var currentWeather = {}
-
 var cities = [];
 
+var selectedCity = {}
+
+// object & methods for weather data
+var weatherData = {
+  wind: function(){
+    return this.windSpeed+" mph from "+this.windDeg+"º gusting "+this.windGust+" mph";
+  },
+
+  currentTemp: function(){
+    return this.temp+"º (feels like " + this.feelsLike+"º)";
+  }
+};
+
+
+var localTime = function(unixTime){
+  return (moment
+    .unix(unixTime)
+    .format("MMM D, YYYY"));
+};
 
 var geoCodeCity = function (location) {
     var location = location.toString().replace(/ /g, '%20');
@@ -35,8 +50,7 @@ var geoCodeCity = function (location) {
           // console.log(selectedCity.label);
           // console.log(selectedCity);
 
-          getCurrentWeather(selectedCity.lat, selectedCity.lon);
-          getUvi(selectedCity.lat, selectedCity.lon);
+          getweatherData(selectedCity.lat, selectedCity.lon);
           getForecast(selectedCity.lat, selectedCity.lon);
           displayWeather(data);
 
@@ -48,19 +62,19 @@ var geoCodeCity = function (location) {
     
 }
 
-var displayWeather = function(data){
+var displayWeather = function(){
   $("#selected-city").html(selectedCity.label)
-  $("#current-temp").html("<b>Temp:</b> "+currentWeather.temp+" (feels like "+currentWeather.feelsLike+")");
-  $("#current-wind").html("<b>Wind:</b> "+currentWeather.wind+" from "+currentWeather.windDeg+" deg, Gusting "+currentWeather.windGust+" mph");
-  $("#current-humidity").html("<b>Humidity:</b> "+currentWeather.humidity+"%");
-  $("#current-uvi").html("<b>UV Index:</b> "+currentWeather.uvi);
+  $("#current-temp").html("<b>Temp:</b> " + weatherData.currentTemp());
+  $("#current-wind").html("<b>Wind:</b> "+weatherData.wind());
+  $("#current-humidity").html("<b>Humidity:</b> "+weatherData.humidity+"%");
+  $("#current-uvi").html("<b>UV Index:</b> "+weatherData.uvi);
   
 };
-var getCurrentWeather = function(lat, lon){
+var getweatherData = function(lat, lon){
 
   // var apiUrl = "https://api.openweathermap.org/data/2.5/onecall?lat=33.44&lon=-94.04&exclude=hourly,daily&appid="+apiKey;
 
-  var apiUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=imperial&appid=${apiKeyOpenWeather}`
+  var apiUrl = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&units=imperial&appid=${apiKeyOpenWeather}`
   // make a request to the api
   fetch(apiUrl).then (response => {
     //  check if api returned any weather
@@ -68,35 +82,39 @@ var getCurrentWeather = function(lat, lon){
       response.json()
         .then (data => {
           // write to object and handles data errors with "-"
-          if (data.main.hasOwnProperty("temp")){
-            currentWeather.temp = data.main.temp.toFixed(0);
-          } else {currentWeather.temp = "n/a";}
+          if (data.current.hasOwnProperty("temp")){
+            weatherData.temp = data.current.temp.toFixed(0);
+          } else {weatherData.temp = "n/a";}
 
-          if(data.main.hasOwnProperty("feels_like")) {
-            currentWeather.feelsLike = data.main.feels_like.toFixed(0);
-          } else {currentWeather.feelsLike = "n/a";}
+          if(data.current.hasOwnProperty("feels_like")) {
+            weatherData.feelsLike = data.current.feels_like.toFixed(0);
+          } else {weatherData.feelsLike = "n/a";}
 
-          if(data.main.hasOwnProperty("humidity")) {
-            currentWeather.humidity = data.main.humidity.toFixed(0);
-          } else {currentWeather.humidity = "n/a";}
+          if(data.current.hasOwnProperty("humidity")) {
+            weatherData.humidity = data.current.humidity.toFixed(0);
+          } else {weatherData.humidity = "n/a";}
           
-          if(data.main.hasOwnProperty("pressure")) {
-            currentWeather.pressure = data.main.pressure.toFixed(1);
-          } else {currentWeather.pressure = "n/a";}
+          if(data.current.hasOwnProperty("pressure")) {
+            weatherData.pressure = data.current.pressure.toFixed(1);
+          } else {weatherData.pressure = "n/a";}
 
-          if(data.wind.hasOwnProperty("deg")) {
-            currentWeather.windDeg = data.wind.deg.toFixed(0);
-          } else {currentWeather.windDeg = "n/a";}
+          if(data.current.hasOwnProperty("wind_deg")) {
+            weatherData.windDeg = data.current.wind_deg.toFixed(0);
+          } else {weatherData.windDeg = "n/a";}
 
-          if(data.wind.hasOwnProperty("speed")) {
-            currentWeather.windSpeed = data.wind.speed.toFixed(0);
-          } else {currentWeather.windSpeed = "n/a";}
+          if(data.current.hasOwnProperty("wind_speed")) {
+            weatherData.windSpeed = data.current.wind_speed.toFixed(0);
+          } else {weatherData.windSpeed = "n/a";}
 
-          if(data.wind.hasOwnProperty("gust")) {
-            currentWeather.windGust = data.wind.gust.toFixed(0);
-          } else {currentWeather.windGust = "n/a";}
+          if(data.current.hasOwnProperty("wind_gust")) {
+            weatherData.windGust = data.current.wind_gust.toFixed(0);
+          } else {weatherData.windGust = "n/a";}
 
-          displayWeather(data)
+          if(data.current.hasOwnProperty("uvi")) {
+            weatherData.uvi = data.current.uvi.toFixed(0);
+          } else {weatherData.uvi = "n/a";}
+
+          displayWeather()
           
 
         });
@@ -120,8 +138,8 @@ var getUvi = function(lat, lon){
         .then (data => {
           // write to object and handles data errors with "-"
           if (data.hasOwnProperty("value")){
-            currentWeather.uvi = data.value.toFixed(1);
-          } else {currentWeather.uvi = "n/a";}
+            weatherData.uvi = data.value.toFixed(1);
+          } else {weatherData.uvi = "n/a";}
         });
     } else {
       alert("Error: City Not Found");
@@ -132,8 +150,8 @@ var getUvi = function(lat, lon){
 var getForecast = function(lat, lon){
 
   var apiUrl = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&units=imperial&appid=${apiKeyOpenWeather}`
-debugger
-  var apiUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=imperial&appid=${apiKeyOpenWeather}`
+
+  // var apiUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=imperial&appid=${apiKeyOpenWeather}`
   // make a request to the api
   fetch(apiUrl).then (response => {
     //  check if api returned any weather
@@ -143,14 +161,16 @@ debugger
           debugger
           // write to object and handles data errors with "-"
           if (data.hasOwnProperty("value")){
-            currentWeather.uvi = data.value.toFixed(1);
-          } else {currentWeather.uvi = "n/a";}
+            weatherData.uvi = data.value.toFixed(1);
+          } else {weatherData.uvi = "n/a";}
         });
     } else {
       alert("Error: City Not Found");
     }
   });
 };
+
+
 geoCodeCity("livonia, MI");
 // Livonia, MI = 4999837
 // getWeather("4999837");

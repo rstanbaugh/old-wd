@@ -51,9 +51,7 @@ var geoCodeCity = function (location) {
           // console.log(selectedCity);
 
           getweatherData(selectedCity.lat, selectedCity.lon);
-          getForecast(selectedCity.lat, selectedCity.lon);
           displayWeather(data);
-
         });
     } else {
       alert("Error: City Not Found");
@@ -123,7 +121,6 @@ var getweatherData = function(lat, lon){
     }
   });
 };
-
 
 
 geoCodeCity("livonia, MI");

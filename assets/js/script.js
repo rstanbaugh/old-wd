@@ -63,6 +63,9 @@ var displayWeather = function(){
   $("#current-uvi").html("<b>UV Index:</b> "+weatherData.uvi);
 
   
+  // delete any existing cards
+  $("#forecast").empty();
+
   // display forecast
   for (i = 1; i < 6;i ++){
     var card = document.createElement("div");
@@ -88,7 +91,7 @@ var displayWeather = function(){
     temps.innerHTML = weatherData.f_maxTemp[i] + "º | " + weatherData.f_minTemp[i] + "º";
     card.appendChild(temps);
 
-    forecastContainerEl.appendChild(card);
+    $("#forecast").append(card);
   };
 
   
@@ -190,7 +193,6 @@ var getweatherData = function(lat, lon){
 
 var formSubmitHandler = function(event){
   event.preventDefault();
-  debugger
   var city = $("#city").val().trim();
   if(city){
       geoCodeCity(city);

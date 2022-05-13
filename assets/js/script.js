@@ -10,12 +10,40 @@ var selectedCity = {}
 
 // object & methods for weather data
 var weatherData = {
+  f_dt: [],
+  f_maxTemp: [],
+  f_minTemp: [],
+  f_minTemp: [],
+  f_clouds: [],
+  f_humidity: [],
+  f_icon: [],
+  f_description: [],
+
   wind: function(){
     return this.windSpeed+" mph from "+this.windDeg+"º gusting "+this.windGust+" mph";
   },
 
   currentTemp: function(){
     return this.temp+"º (feels like " + this.feelsLike+"º)";
+  },
+
+  clear: function(){
+    // temp = "";
+    // feelsLike = "";
+    // humidity = "";
+    // pressure = "";
+    // windDeg = "";
+    // windSpeed = "";
+    // windGust = "";
+    // uvi = "";
+    f_dt = [];
+    f_maxTemp = [];
+    f_minTemp = [];
+    f_minTemp = [];
+    f_clouds = [];
+    f_humidity = [];
+    f_icon = [];
+    f_description = [];
   }
 };
 
@@ -24,6 +52,15 @@ var localTime = function(unixTime){
   return (moment
     .unix(unixTime)
     .format("MMM D, YYYY"));
+};
+
+var displayWeather = function(){
+  $("#selected-city").html(selectedCity.label)
+  $("#current-temp").html("<b>Temp:</b> " + weatherData.currentTemp());
+  $("#current-wind").html("<b>Wind:</b> "+weatherData.wind());
+  $("#current-humidity").html("<b>Humidity:</b> "+weatherData.humidity+"%");
+  $("#current-uvi").html("<b>UV Index:</b> "+weatherData.uvi);
+  
 };
 
 var geoCodeCity = function (location) {
@@ -60,17 +97,7 @@ var geoCodeCity = function (location) {
     
 }
 
-var displayWeather = function(){
-  $("#selected-city").html(selectedCity.label)
-  $("#current-temp").html("<b>Temp:</b> " + weatherData.currentTemp());
-  $("#current-wind").html("<b>Wind:</b> "+weatherData.wind());
-  $("#current-humidity").html("<b>Humidity:</b> "+weatherData.humidity+"%");
-  $("#current-uvi").html("<b>UV Index:</b> "+weatherData.uvi);
-  
-};
 var getweatherData = function(lat, lon){
-
-  // var apiUrl = "https://api.openweathermap.org/data/2.5/onecall?lat=33.44&lon=-94.04&exclude=hourly,daily&appid="+apiKey;
 
   var apiUrl = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&units=imperial&appid=${apiKeyOpenWeather}`
   // make a request to the api
@@ -79,7 +106,7 @@ var getweatherData = function(lat, lon){
     if(response.ok){
       response.json()
         .then (data => {
-          // write to object and handles data errors with "-"
+          // write to api data to WeatherData obj and handles data errors with "-"
           if (data.current.hasOwnProperty("temp")){
             weatherData.temp = data.current.temp.toFixed(0);
           } else {weatherData.temp = "n/a";}
@@ -112,9 +139,21 @@ var getweatherData = function(lat, lon){
             weatherData.uvi = data.current.uvi.toFixed(0);
           } else {weatherData.uvi = "n/a";}
 
-          displayWeather()
           
+          // now fetch forecast data
 
+          for (i in data.daily){
+            debugger
+            weatherData.f_dt[i] = data.daily[i].dt;
+            weatherData.f_maxTemp[i] = data.daily[i].temp.max;
+            weatherData.f_minTemp[i] = data.daily[i].temp.min;
+            weatherData.f_minTemp[i] = data.daily[i].temp.min;
+            weatherData.f_clouds[i] = data.daily[i].clouds;
+            weatherData.f_humidity[i] = data.daily[i].humidity;
+            weatherData.f_icon[i] = data.daily[i].icon;
+            weatherData.f_description[i] = data.daily[i].description;
+          }
+          displayWeather()
         });
     } else {
       alert("Error: City Not Found");

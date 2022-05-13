@@ -124,51 +124,6 @@ var getweatherData = function(lat, lon){
   });
 };
 
-var getUvi = function(lat, lon){
-
-  // var apiUrl = "https://api.openweathermap.org/data/2.5/onecall?lat=33.44&lon=-94.04&exclude=hourly,daily&appid="+apiKey;
-
-  var apiUrl = `https://api.openweathermap.org/data/2.5/uvi?lat=${lat}&lon=${lon}&units=imperial&appid=${apiKeyOpenWeather}`
-  // make a request to the api
-  
-  fetch(apiUrl).then (response => {
-    //  check if api returned any weather
-    if(response.ok){
-      response.json()
-        .then (data => {
-          // write to object and handles data errors with "-"
-          if (data.hasOwnProperty("value")){
-            weatherData.uvi = data.value.toFixed(1);
-          } else {weatherData.uvi = "n/a";}
-        });
-    } else {
-      alert("Error: City Not Found");
-    }
-  });
-};
-
-var getForecast = function(lat, lon){
-
-  var apiUrl = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&units=imperial&appid=${apiKeyOpenWeather}`
-
-  // var apiUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=imperial&appid=${apiKeyOpenWeather}`
-  // make a request to the api
-  fetch(apiUrl).then (response => {
-    //  check if api returned any weather
-    if(response.ok){
-      response.json()
-        .then (data => {
-          debugger
-          // write to object and handles data errors with "-"
-          if (data.hasOwnProperty("value")){
-            weatherData.uvi = data.value.toFixed(1);
-          } else {weatherData.uvi = "n/a";}
-        });
-    } else {
-      alert("Error: City Not Found");
-    }
-  });
-};
 
 
 geoCodeCity("livonia, MI");

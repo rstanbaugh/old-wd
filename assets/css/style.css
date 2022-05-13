@@ -4,6 +4,10 @@
 }
 
 .weather-card {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-items: center;
   width: 10em;
   background-color: rgba(55,70,89,1);
   color: white;

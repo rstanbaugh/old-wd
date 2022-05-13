@@ -1,4 +1,5 @@
 var citySearchEl = document.querySelector("#city-search");
+var forecastContainerEl = document.querySelector("#forecast");
 
 
 var apiKeyOpenWeather = config.openWeatherApiKey;
@@ -48,10 +49,10 @@ var weatherData = {
 };
 
 
-var localTime = function(unixTime){
+var forecastDate = function(unixTime){
   return (moment
     .unix(unixTime)
-    .format("MMM D, YYYY"));
+    .format("ddd  DD"));
 };
 
 var displayWeather = function(){
@@ -60,6 +61,36 @@ var displayWeather = function(){
   $("#current-wind").html("<b>Wind:</b> "+weatherData.wind());
   $("#current-humidity").html("<b>Humidity:</b> "+weatherData.humidity+"%");
   $("#current-uvi").html("<b>UV Index:</b> "+weatherData.uvi);
+
+  
+  // display forecast
+  for (i = 1; i < 6;i ++){
+    var card = document.createElement("div");
+    card.classList = "weather-card";
+
+    // create the date header
+    var header = document.createElement("h5");
+    header.innerHTML = forecastDate(weatherData.f_dt[i]);
+    card.appendChild(header);
+   
+    // create the weather icon
+    var weatherIcon = document.createElement("img");
+    var path = `https://openweathermap.org/img/wn/${weatherData.f_icon[i]}@2x.png`
+    weatherIcon.setAttribute("src", path);
+    card.appendChild(weatherIcon);
+
+    // create weather description
+    var description = document.createElement("p");
+    description.innerHTML = weatherData.f_description[i];
+    card.appendChild(description);
+
+    var temps = document.createElement("p");
+    temps.innerHTML = weatherData.f_maxTemp[i] + "º | " + weatherData.f_minTemp[i] + "º";
+    card.appendChild(temps);
+
+    forecastContainerEl.appendChild(card);
+  };
+
   
 };
 
@@ -87,8 +118,7 @@ var geoCodeCity = function (location) {
           // console.log(selectedCity.label);
           // console.log(selectedCity);
 
-          getweatherData(selectedCity.lat, selectedCity.lon);
-          displayWeather(data);
+        getweatherData(selectedCity.lat, selectedCity.lon);
         });
     } else {
       alert("Error: City Not Found");
@@ -98,7 +128,6 @@ var geoCodeCity = function (location) {
 }
 
 var getweatherData = function(lat, lon){
-
   var apiUrl = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&units=imperial&appid=${apiKeyOpenWeather}`
   // make a request to the api
   fetch(apiUrl).then (response => {
@@ -141,17 +170,14 @@ var getweatherData = function(lat, lon){
 
           
           // now fetch forecast data
-
           for (i in data.daily){
-            debugger
             weatherData.f_dt[i] = data.daily[i].dt;
-            weatherData.f_maxTemp[i] = data.daily[i].temp.max;
-            weatherData.f_minTemp[i] = data.daily[i].temp.min;
-            weatherData.f_minTemp[i] = data.daily[i].temp.min;
+            weatherData.f_icon[i] = data.daily[i].weather[0].icon;
+            weatherData.f_description[i] = data.daily[i].weather[0].description;
+            weatherData.f_maxTemp[i] = data.daily[i].temp.max.toFixed(0);
+            weatherData.f_minTemp[i] = data.daily[i].temp.min.toFixed(0);
             weatherData.f_clouds[i] = data.daily[i].clouds;
             weatherData.f_humidity[i] = data.daily[i].humidity;
-            weatherData.f_icon[i] = data.daily[i].icon;
-            weatherData.f_description[i] = data.daily[i].description;
           }
           displayWeather()
         });

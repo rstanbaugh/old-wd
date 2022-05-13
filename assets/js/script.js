@@ -29,14 +29,6 @@ var weatherData = {
   },
 
   clear: function(){
-    // temp = "";
-    // feelsLike = "";
-    // humidity = "";
-    // pressure = "";
-    // windDeg = "";
-    // windSpeed = "";
-    // windGust = "";
-    // uvi = "";
     f_dt = [];
     f_maxTemp = [];
     f_minTemp = [];
@@ -48,7 +40,6 @@ var weatherData = {
   }
 };
 
-
 var forecastDate = function(unixTime){
   return (moment
     .unix(unixTime)
@@ -56,20 +47,20 @@ var forecastDate = function(unixTime){
 };
 
 var displayWeather = function(){
-  $("#selected-city").html(selectedCity.label)
+  $("#selected-city").html(selectedCity.label + " - " + moment(weatherData.dt).format("MMM DD, YYYY"))
+  
   $("#current-temp").html("<b>Temp:</b> " + weatherData.currentTemp());
   $("#current-wind").html("<b>Wind:</b> "+weatherData.wind());
   $("#current-humidity").html("<b>Humidity:</b> "+weatherData.humidity+"%");
   $("#current-uvi").html("<b>UV Index:</b> "+weatherData.uvi);
-
-  
+  $("#current-icon").attr("src",`https://openweathermap.org/img/wn/${weatherData.icon}@2x.png`);
   // delete any existing cards
   $("#forecast").empty();
 
   // display forecast
   for (i = 1; i < 6;i ++){
     var card = document.createElement("div");
-    card.classList = "weather-card";
+    card.classList = "weather-card rounded bg-primary m-2";
 
     // create the date header
     var header = document.createElement("h5");
@@ -78,8 +69,7 @@ var displayWeather = function(){
    
     // create the weather icon
     var weatherIcon = document.createElement("img");
-    var path = `https://openweathermap.org/img/wn/${weatherData.f_icon[i]}@2x.png`
-    weatherIcon.setAttribute("src", path);
+    weatherIcon.setAttribute("src", "https://openweathermap.org/img/wn/"+weatherData.f_icon[i]+"@2x.png");
     card.appendChild(weatherIcon);
 
     // create weather description
@@ -90,11 +80,14 @@ var displayWeather = function(){
     var temps = document.createElement("p");
     temps.innerHTML = weatherData.f_maxTemp[i] + "º | " + weatherData.f_minTemp[i] + "º";
     card.appendChild(temps);
+    
+    var temps = document.createElement("p");
+    temps.innerHTML = "Humidity "+weatherData.f_humidity[i] + "%";
+    card.appendChild(temps);
 
     $("#forecast").append(card);
   };
 
-  
 };
 
 var geoCodeCity = function (location) {
@@ -143,6 +136,10 @@ var getweatherData = function(lat, lon){
           if (data.current.hasOwnProperty("temp")){
             weatherData.temp = data.current.temp.toFixed(0);
           } else {weatherData.temp = "n/a";}
+
+          if (data.current.weather[0].hasOwnProperty("icon")){
+            weatherData.icon = data.current.weather[0].icon;
+          } else {weatherData.icon = "n/a";}
 
           if(data.current.hasOwnProperty("feels_like")) {
             weatherData.feelsLike = data.current.feels_like.toFixed(0);
@@ -201,11 +198,8 @@ var formSubmitHandler = function(event){
       alert("Please enter a City");
   }};
 
-
-geoCodeCity("livonia, MI");
-
+  // default City
+geoCodeCity("Miami, FL");
 
 // listeners
 $("#city-search").on("submit", formSubmitHandler);
-// Livonia, MI = 4999837
-// getWeather("4999837");

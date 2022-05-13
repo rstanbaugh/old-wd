@@ -9,7 +9,7 @@
 </head>
 
 <!-- DEV-ITEM put a box around boxy -->
-<body class="border border-dark rounded m-2">
+<body class="border border-dark rounded m-1">
   <header class="grad text-white text-center p-1">
     <h2 >Weather Dashboard</h2>
   </header>
@@ -36,8 +36,10 @@
       <!-- right side / col start-->
       <div class="col-12 col-md-9">
         <!-- current weather section on top right side -->
-        <div id="current-weather" class="border border-dark w-100 p-2 mt-2 mb-3">
+        <div id="current-weather" class="border border-dark rounded w-100 p-2 mt-2 mb-3">
           <h5 id="selected-city">Atlanta</h4>
+          
+          <img id="current-icon" src="">
           <p id="current-temp">Temp:</p>
           <p id="current-wind">Wind:</p>
           <p id="current-humidity">Humidity</p>
@@ -48,7 +50,7 @@
         <!-- 5-day forcast -->
         <div>
             <h5>5-Day Forecast:</h5>
-            <div  id="forecast" class="d-flex flex-wrap justify-content-between p">
+            <div  id="forecast" class="d-flex flex-wrap mr-2">
               
             </div>
           </div>

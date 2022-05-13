@@ -135,6 +135,7 @@ var getweatherData = function(lat, lon){
     if(response.ok){
       response.json()
         .then (data => {
+          weatherData.clear();
           // write to api data to WeatherData obj and handles data errors with "-"
           if (data.current.hasOwnProperty("temp")){
             weatherData.temp = data.current.temp.toFixed(0);
@@ -187,7 +188,22 @@ var getweatherData = function(lat, lon){
   });
 };
 
+var formSubmitHandler = function(event){
+  event.preventDefault();
+  debugger
+  var city = $("#city").val().trim();
+  if(city){
+      geoCodeCity(city);
+ 
+  } else{
+      alert("Please enter a City");
+  }};
+
 
 geoCodeCity("livonia, MI");
+
+
+// listeners
+$("#city-search").on("submit", formSubmitHandler);
 // Livonia, MI = 4999837
 // getWeather("4999837");

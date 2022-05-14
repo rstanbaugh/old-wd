@@ -23,6 +23,8 @@ var weatherData = {
   f_humidity: [],
   f_icon: [],
   f_description: [],
+  f_windSpeed: [],
+  f_windDeg: [],
 
   wind: function(){
     return this.windSpeed+" mph from "+this.windDeg+"º gusting "+this.windGust+" mph";
@@ -41,6 +43,8 @@ var weatherData = {
     f_humidity = [];
     f_icon = [];
     f_description = [];
+    f_windSpeed = [];
+    f_windDeg = [];
   }
 };
 
@@ -70,6 +74,38 @@ var forecastDate = function(unixTime){
   return (moment
     .unix(unixTime)
     .format("ddd  DD"));
+};
+
+var getWindIcon = function(windDeg){
+   
+  if ((windDeg >= 0 && windDeg < 22.5) || (windDeg >= 337.5 && windDeg <= 360)){
+    // wind from north
+    return "<i class='bi bi-arrow-down'></i>";
+  } else if (windDeg >= 22.5 && windDeg < 67.5){
+    // wind from NE
+    return "<i class='bi bi-arrow-down-left'></i>";
+  } else if (windDeg >= 67.5 && windDeg < 112.5){
+    // wind from E
+    return "<i class='bi bi-arrow-left'></i>";
+  } else if (windDeg >= 112.5 && windDeg < 157.5){
+    // wind from SE
+    return "<i class='bi bi-arrow-up-left'></i>";
+  } else if (windDeg >= 157.5 && windDeg < 202.5){
+    // wind from S
+    return "<i class='bi bi-arrow-up'></i>";
+  } else if (windDeg >= 202.5 && windDeg < 247.5){
+    // wind from SW
+    return "<i class='bi bi-arrow-up-right'></i>";
+  } else if (windDeg >= 247.5 && windDeg < 292.5){
+    // wind from W
+    return "<i class='bi bi-arrow-right'></i>";
+  } else if (windDeg >= 292.5 && windDeg < 337.5){
+    // wind from NW
+    return "<i class='bi bi-arrow-down-right'></i>";
+  } else {
+    alert("you missed a direction in getWindIcon()!");
+    debugger
+  }
 };
 
 var displayWeather = function(){
@@ -114,10 +150,17 @@ var displayWeather = function(){
     description.innerHTML = weatherData.f_description[i];
     card.appendChild(description);
 
+    // weather temos
     var temps = document.createElement("p");
     temps.innerHTML = weatherData.f_maxTemp[i] + "º | " + weatherData.f_minTemp[i] + "º";
     card.appendChild(temps);
+
+    // weather winds
+    var winds = document.createElement("p");
+    winds.innerHTML = (getWindIcon(weatherData.f_windDeg[i]) + " " + weatherData.f_windSpeed[i]+" mph");
+    card.appendChild(winds);
     
+    // weather humidity
     var temps = document.createElement("p");
     temps.innerHTML = "Humidity "+weatherData.f_humidity[i] + "%";
     card.appendChild(temps);
@@ -224,6 +267,8 @@ var getweatherData = function(lat, lon){
             weatherData.f_description[i] = data.daily[i].weather[0].description;
             weatherData.f_maxTemp[i] = data.daily[i].temp.max.toFixed(0);
             weatherData.f_minTemp[i] = data.daily[i].temp.min.toFixed(0);
+            weatherData.f_windSpeed[i] = data.daily[i].wind_speed.toFixed(0);
+            weatherData.f_windDeg[i] = data.daily[i].wind_deg.toFixed(0);
             weatherData.f_clouds[i] = data.daily[i].clouds;
             weatherData.f_humidity[i] = data.daily[i].humidity;
           }
@@ -245,11 +290,13 @@ var pastSearchClickHandler = function(event){
 
 var formSubmitHandler = function(event){
   event.preventDefault();
-  let city = $("#city").val().trim();
+  let city = $("#city").val().trim().toLowerCase();
   $("#city").val("")
-  
+
   if(city){
-      geoCodeCity(city);
+    // handle a wierd case of search for miami
+    if(city.toLowerCase()=="miami"){city="miami, fl"}
+    geoCodeCity(city);
  
   } else{
       alert(alert_3);

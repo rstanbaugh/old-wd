@@ -115,8 +115,8 @@ var displayWeather = function(){
   $("#current-weather").append("<h5>"+selectedCity.label + " - " + moment(weatherData.dt).format("MMM DD, YYYY")+"</h5>");
   $("#current-weather").append("<img class='border border-solid mb-3' alt='weather icon' src=https://openweathermap.org/img/wn/"+weatherData.icon+"@2x.png>");
   $("#current-weather").append("<p><b>Temp:</b> " + weatherData.currentTemp()+"</p>");
-  $("#current-weather").append("<p>Wind:</b> "+weatherData.wind()+"</p>");
-  $("#current-weather").append("<p><b>Humidity:</b> <>"+weatherData.humidity+"%</p>");
+  $("#current-weather").append("<p><b>Wind:</b> "+weatherData.wind()+"</p>");
+  $("#current-weather").append("<p><b>Humidity:</b> "+weatherData.humidity+"%</p>");
   $("#current-weather").append("<p id=uvi><b>UV Index:</b> <span>"+weatherData.uvi+"</span></p>");  
     // if favorable / moderate / severe
     if (weatherData.uvi <= 2) {

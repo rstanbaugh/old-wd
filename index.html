@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.2/font/bootstrap-icons.css">
   <link rel="stylesheet" href="./assets/css/style.css">
@@ -19,7 +21,7 @@
     <div class="row border-primary flex-wrap">
 
       <!-- left side / col start-->
-      <div class="col-lg-3 col-md-4 col-sm-6 p-1">
+      <div class="col-lg-3 col-md-4 col-sm-12 p-1">
           <h5>Search for a City:</h5>
           <form id="city-search" class="form-grp">
             <input type="text" id="city" class="form-control form-block  mb-2" placeholder="city, state, country" autofocus="true">
@@ -33,7 +35,7 @@
       <!-- left side / col end -->
 
       <!-- right side / col start-->
-      <div class="col-lg-9 col-md-8 col-sm-6">
+      <div class="col-lg-9 col-md-8 col-sm-12">
         <!-- current weather section on top right side -->
         <div id="current-weather" class="border border-dark rounded  p-2 mt-2 mb-3">
           <!-- will hold current weather -->
@@ -41,7 +43,7 @@
         <!-- end of current weather section -->
 
         <!-- 5-day forcast -->
-        <div>
+        <div id="forecast-weather">
             <h5>5-Day Forecast:</h5>
             <div  id="forecast" class="d-flex flex-wrap mr-2">
               <!-- will hold 5-day forcast -->

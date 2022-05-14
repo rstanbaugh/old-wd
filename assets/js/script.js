@@ -113,7 +113,7 @@ var displayWeather = function(){
   $("#current-weather").empty();
 
   $("#current-weather").append("<h5>"+selectedCity.label + " - " + moment(weatherData.dt).format("MMM DD, YYYY")+"</h5>");
-  $("#current-weather").append("<img src=https://openweathermap.org/img/wn/"+weatherData.icon+"@2x.png>");
+  $("#current-weather").append("<img class='border border-solid mb-3' alt='weather icon' src=https://openweathermap.org/img/wn/"+weatherData.icon+"@2x.png>");
   $("#current-weather").append("<p><b>Temp:</b> " + weatherData.currentTemp()+"</p>");
   $("#current-weather").append("<p>Wind:</b> "+weatherData.wind()+"</p>");
   $("#current-weather").append("<p><b>Humidity:</b> <>"+weatherData.humidity+"%</p>");
@@ -143,6 +143,7 @@ var displayWeather = function(){
     // create the weather icon
     var weatherIcon = document.createElement("img");
     weatherIcon.setAttribute("src", "https://openweathermap.org/img/wn/"+weatherData.f_icon[i]+"@2x.png");
+    weatherIcon.setAttribute("alt","weather icon");
     card.appendChild(weatherIcon);
 
     // create weather description

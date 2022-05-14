@@ -19,8 +19,8 @@
   font-size: .75em;
 }
 
-#current-weather img{
-  /* background-color: lightgray; */
+#current-weather {
+  /* background-color: lightblue; */
 }
 
 #current-weather h5{

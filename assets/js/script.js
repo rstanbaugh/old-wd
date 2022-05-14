@@ -3,17 +3,15 @@ var forecastContainerEl = document.querySelector("#forecast");
 
 var alert_1 = "Error: City Not Found";
 var alert_2 = "Error: City Not Found.\n\nSearch: city, state, country or zip code.";
-var alert_3 = "Please enter a City * first loop";
+var alert_3 = "Please enter a City";
 var alert_4 = "network error"
 
-
-
+// get apiKeys from config.js
 var apiKeyOpenWeather = config.openWeatherApiKey;
 var apiKeyPositionStack = config.positionStackApiKey
 
 var cities = [];
-
-var selectedCity = {}
+var selectedCity = {};
 
 // object & methods for weather data
 var weatherData = {
@@ -46,6 +44,26 @@ var weatherData = {
   }
 };
 
+var searchHistory = function(city){
+  // limit search history to 8 cities
+  if (cities.length >= 10) {
+    cities = cities.slice(1,10);
+  }
+  // don't enter duplicate cities
+  if(!cities.includes(city)){
+    cities.push(city);
+  } else {
+    // move current search to top of the list
+    cities.push(cities.splice(cities.indexOf(city), 1)[0]);
+  }
+  $("#past-searches").empty();
+  let i = cities.length - 1;
+  while (i >= 0){
+    $("#past-searches").append("<button type='button' class='list-group-item list-group-item-action'>"+cities[i]+"</button>");
+    i--;
+  }
+
+};
 var forecastDate = function(unixTime){
   return (moment
     .unix(unixTime)
@@ -53,7 +71,7 @@ var forecastDate = function(unixTime){
 };
 
 var displayWeather = function(){
-   // display current weather
+   // display existing current weather
   $("#current-weather").empty();
 
   $("#current-weather").append("<h5>"+selectedCity.label + " - " + moment(weatherData.dt).format("MMM DD, YYYY")+"</h5>");
@@ -71,10 +89,8 @@ var displayWeather = function(){
       $("#uvi span").addClass("badge badge-danger");
     }
   
-  // delete any existing cards
+  // delete any existing forecast cards
   $("#forecast").empty();
-
-
 
   // display forecast
   for (i = 1; i < 6;i ++){
@@ -132,9 +148,9 @@ var geoCodeCity = function (location) {
             selectedCity.country = data.data[0].country_code;
             selectedCity.lat = data.data[0].latitude;
             selectedCity.lon = data.data[0].longitude;
-            // console.log(selectedCity.label);
-            // console.log(selectedCity);
 
+            //  save selected city and getWeather()
+            searchHistory(selectedCity.label);
             getweatherData(selectedCity.lat, selectedCity.lon);
 
           } else {
@@ -220,10 +236,14 @@ var getweatherData = function(lat, lon){
     alert(alert_4);
   });
 };
+var pastSearchClickHandler = function(event){
+  event.preventDefault();
+  geoCodeCity($(event.target).text());
+};
 
 var formSubmitHandler = function(event){
   event.preventDefault();
-  var city = $("#city").val().trim();
+  let city = $("#city").val().trim();
   $("#city").val("")
   
   if(city){
@@ -234,7 +254,8 @@ var formSubmitHandler = function(event){
   }};
 
   // default City
-geoCodeCity("Miami, FL");
+  geoCodeCity("Miami, FL");
 
 // listeners
 $("#city-search").on("submit", formSubmitHandler);
+$("#past-searches").on("click", pastSearchClickHandler);

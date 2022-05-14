@@ -19,6 +19,10 @@
   font-size: .75em;
 }
 
+#current-weather img{
+  /* background-color: lightgray; */
+}
+
 #current-weather h5{
   padding-bottom: .5em;
 }

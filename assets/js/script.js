@@ -1,6 +1,12 @@
 var citySearchEl = document.querySelector("#city-search");
 var forecastContainerEl = document.querySelector("#forecast");
 
+var alert_1 = "Error: City Not Found";
+var alert_2 = "Error: City Not Found.\n\nSearch: city, state, country or zip code.";
+var alert_3 = "Please enter a City * first loop";
+var alert_4 = "network error"
+
+
 
 var apiKeyOpenWeather = config.openWeatherApiKey;
 var apiKeyPositionStack = config.positionStackApiKey
@@ -47,15 +53,28 @@ var forecastDate = function(unixTime){
 };
 
 var displayWeather = function(){
-  $("#selected-city").html(selectedCity.label + " - " + moment(weatherData.dt).format("MMM DD, YYYY"))
+   // display current weather
+  $("#current-weather").empty();
+
+  $("#current-weather").append("<h5>"+selectedCity.label + " - " + moment(weatherData.dt).format("MMM DD, YYYY")+"</h5>");
+  $("#current-weather").append("<img src=https://openweathermap.org/img/wn/"+weatherData.icon+"@2x.png>");
+  $("#current-weather").append("<p><b>Temp:</b> " + weatherData.currentTemp()+"</p>");
+  $("#current-weather").append("<p>Wind:</b> "+weatherData.wind()+"</p>");
+  $("#current-weather").append("<p><b>Humidity:</b> <>"+weatherData.humidity+"%</p>");
+  $("#current-weather").append("<p id=uvi><b>UV Index:</b> <span>"+weatherData.uvi+"</span></p>");  
+    // if favorable / moderate / severe
+    if (weatherData.uvi <= 2) {
+      $("#uvi span").addClass("badge badge-success");
+    } else if (weatherData.uvi <= 5)
+      $("#uvi span").addClass("badge badge-warning");
+    else {
+      $("#uvi span").addClass("badge badge-danger");
+    }
   
-  $("#current-temp").html("<b>Temp:</b> " + weatherData.currentTemp());
-  $("#current-wind").html("<b>Wind:</b> "+weatherData.wind());
-  $("#current-humidity").html("<b>Humidity:</b> "+weatherData.humidity+"%");
-  $("#current-uvi").html("<b>UV Index:</b> "+weatherData.uvi);
-  $("#current-icon").attr("src",`https://openweathermap.org/img/wn/${weatherData.icon}@2x.png`);
   // delete any existing cards
   $("#forecast").empty();
+
+
 
   // display forecast
   for (i = 1; i < 6;i ++){
@@ -102,25 +121,35 @@ var geoCodeCity = function (location) {
     if(response.ok){
       response.json()
         .then (data => {
-          // write data to selectedCity obj
-          selectedCity.label = data.data[0].label;
-          selectedCity.city = data.data[0].locality;
-          selectedCity.street = data.data[0].street;
-          selectedCity.state = data.data[0].region;
-          selectedCity.zip = data.data[0].postal_code;
-          selectedCity.country = data.data[0].country_code;
-          selectedCity.lat = data.data[0].latitude;
-          selectedCity.lon = data.data[0].longitude;
-          // console.log(selectedCity.label);
-          // console.log(selectedCity);
+          // check if valid location found
+          if (data.data[0]){
+            // write data to selectedCity obj
+            selectedCity.label = data.data[0].label;
+            selectedCity.city = data.data[0].locality;
+            selectedCity.street = data.data[0].street;
+            selectedCity.state = data.data[0].region;
+            selectedCity.zip = data.data[0].postal_code;
+            selectedCity.country = data.data[0].country_code;
+            selectedCity.lat = data.data[0].latitude;
+            selectedCity.lon = data.data[0].longitude;
+            // console.log(selectedCity.label);
+            // console.log(selectedCity);
 
-        getweatherData(selectedCity.lat, selectedCity.lon);
-        });
+            getweatherData(selectedCity.lat, selectedCity.lon);
+
+          } else {
+            alert(alert_2)
+          }
+
+        })
     } else {
-      alert("Error: City Not Found");
+      alert(alert_2);
     }
+  })
+  .catch(error => {
+    // this catch is chained to the end of the '.then()
+    alert(alert_4);
   });
-    
 }
 
 var getweatherData = function(lat, lon){
@@ -166,7 +195,7 @@ var getweatherData = function(lat, lon){
           } else {weatherData.windGust = "n/a";}
 
           if(data.current.hasOwnProperty("uvi")) {
-            weatherData.uvi = data.current.uvi.toFixed(0);
+            weatherData.uvi = data.current.uvi.toFixed(1);
           } else {weatherData.uvi = "n/a";}
 
           
@@ -183,19 +212,25 @@ var getweatherData = function(lat, lon){
           displayWeather()
         });
     } else {
-      alert("Error: City Not Found");
+      alert(alert_1);
     }
+  })
+  .catch(error => {
+    // this catch is chained to the end of the '.then()
+    alert(alert_4);
   });
 };
 
 var formSubmitHandler = function(event){
   event.preventDefault();
   var city = $("#city").val().trim();
+  $("#city").val("")
+  
   if(city){
       geoCodeCity(city);
  
   } else{
-      alert("Please enter a City");
+      alert(alert_3);
   }};
 
   // default City

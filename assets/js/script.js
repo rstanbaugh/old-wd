@@ -44,6 +44,8 @@ var weatherData = {
   }
 };
 
+
+
 var searchHistory = function(city){
   // limit search history to 8 cities
   if (cities.length >= 10) {

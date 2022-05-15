@@ -7,11 +7,12 @@
   flex-direction: column;
   flex-wrap: nowrap;
   align-items: center;
-  width: 12em;
+  width: 10em;
   color: white;
   padding-left: .1em;
   padding-top: .25em;
   font-size:medium;
+  padding-left: ;
 }
 
 .weather-card p {
@@ -26,21 +27,4 @@
 #current-weather p {
   font-size: .75em;
   line-height: .9em;
-}
-
-
-
-
-/* Small devices (portrait tablets and large phones, 600px and up) */
-@media only screen and (max-width: 600px) {
-  #forecast {
-    flex-direction: column;
-    align-content: center;
-    margin: 0;
-  }
-
-  #forecast-weather h5 {
-    margin-left: auto;
-    margin-right: auto;
-  }
 }

@@ -10,8 +10,8 @@ var alert_4 = "network error"
 var apiKeyOpenWeather = config.openWeatherApiKey;
 var apiKeyPositionStack = config.positionStackApiKey
 
-var cities = [];
 var selectedCity = {};
+var cities = [];
 
 // object & methods for weather data
 var weatherData = {
@@ -43,17 +43,27 @@ var weatherData = {
     f_description = [];
   }
 };
+// save to local storage
+var saveSearch = function(){
+  localStorage.setItem("wd-cities", JSON.stringify(cities));
+};
+
 
 var searchHistory = function(city){
   // limit search history to 8 cities
   if (cities.length >= 10) {
     cities = cities.slice(1,10);
   }
+  // do nothing if city is empty
+  if (!city) {
+  } 
   // don't enter duplicate cities
-  if(!cities.includes(city)){
+  else if(!cities.includes(city)){
     cities.push(city);
-  } else {
-    // move current search to top of the list
+  } 
+  // otherwise put city on the list
+  else {
+    // otherwise move current search to top of the list
     cities.push(cities.splice(cities.indexOf(city), 1)[0]);
   }
   $("#past-searches").empty();
@@ -130,8 +140,8 @@ var geoCodeCity = function (location) {
 
     // use position stack api to find the lat / lon of the city (much better than getweather geocoding)
     apiUrl = `http://api.positionstack.com/v1/forward?access_key=${apiKeyPositionStack}&query=${location}&limit=1`
-    
-      // make a request to the api
+
+    // make a request to the api
   fetch(apiUrl).then (response => {
     //  check if api returned any weather
     if(response.ok){
@@ -148,9 +158,9 @@ var geoCodeCity = function (location) {
             selectedCity.country = data.data[0].country_code;
             selectedCity.lat = data.data[0].latitude;
             selectedCity.lon = data.data[0].longitude;
-
             //  save selected city and getWeather()
             searchHistory(selectedCity.label);
+            saveSearch();
             getweatherData(selectedCity.lat, selectedCity.lon);
 
           } else {
@@ -236,6 +246,24 @@ var getweatherData = function(lat, lon){
     alert(alert_4);
   });
 };
+
+// load cities from local storage
+var loadCities = function(){
+  // load from local storage
+  cities = JSON.parse(localStorage.getItem("wd-cities"));
+
+  // if nothing in localStorage, laod Miami as the default
+  if (!cities) {
+    cities = [];
+    geoCodeCity("Miami, FL");
+  } else {
+    // load the previous list
+    searchHistory();
+    // load last search as default
+    geoCodeCity(cities[cities.length-1]);
+  }
+};
+  // event handlers below 
 var pastSearchClickHandler = function(event){
   event.preventDefault();
   geoCodeCity($(event.target).text());
@@ -253,8 +281,9 @@ var formSubmitHandler = function(event){
       alert(alert_3);
   }};
 
-  // default City
-  geoCodeCity("Miami, FL");
+  // load saaved searches (if any) and default City
+  loadCities();
+  // geoCodeCity("Miami, FL");
 
 // listeners
 $("#city-search").on("submit", formSubmitHandler);

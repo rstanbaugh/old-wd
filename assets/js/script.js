@@ -185,7 +185,7 @@ var geoCodeCity = function (location) {
     var location = location.toString().replace(/ /g, '%20');
 
     // use position stack api to find the lat / lon of the city (much better than getweather geocoding)
-    apiUrl = `http://api.positionstack.com/v1/forward?access_key=${apiKeyPositionStack}&query=${location}&limit=1`
+    apiUrl = `https://api.positionstack.com/v1/forward?access_key=${apiKeyPositionStack}&query=${location}&limit=1`
 
     // make a request to the api
   fetch(apiUrl).then (response => {
